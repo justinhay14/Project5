@@ -10,7 +10,10 @@ public class BoardingPass implements Serializable {
         this.gate = gate;
     }
     public String toString() {
-        return airline + ": " + passenger.getFirstName() + " " + passenger.getLastName() + ", " + passenger.getAge() +
-                " Gate: " + gate.toString();
+        return "----------------------------------------\n" + "BOARDING PASS FOR FLIGHT 18000 WITH " + airline +
+                " AIRLINES\n" + "PASSENGER FIRST NAME: " + passenger.getFirstName() +
+                "\nPASSENGER LAST NAME: " + passenger.getLastName() + "\nPASSENGER AGE: " + passenger.getAge() +
+                "\nYou can now begin boarding at gate " + gate.toString() +
+                "\n----------------------------------------";
     }
 }
