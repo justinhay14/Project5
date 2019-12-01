@@ -4,7 +4,9 @@ public class Southwest implements Airline {
     private int capacity;
     private int spotsFilled;
     private ArrayList<Passenger> passengers;
+
     public Southwest(int capacity, int spotsFilled) {
+        passengers = new ArrayList<>();
         this.capacity = capacity;
         this.spotsFilled = spotsFilled;
     }
@@ -30,6 +32,7 @@ public class Southwest implements Airline {
 
     @Override
     public void addPassenger(Passenger passenger) {
+        spotsFilled++;
         passengers.add(passenger);
     }
     public String toString() {
