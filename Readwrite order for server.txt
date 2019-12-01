@@ -1,0 +1,16 @@
+write String[] openAirlinesArray
+
+loop -> <Condition: read String until null> <InLoop: write ArrayList<Passenger> or String>
+
+read String airline
+
+read Passenger passenger
+
+loop -> <Condition: specified airline is not open> <InLoop: write String[] openAirlinesArray,
+								read String airline,
+								read Passenger passenger>
+
+
+write Passenger passenger
+
+
