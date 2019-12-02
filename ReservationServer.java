@@ -152,13 +152,13 @@ public class ReservationServer {
                 Passenger passenger = (Passenger) in.readObject();
 
                 //recheck if airline is full and update
-                while (!getAirlinesOpen().contains(airline)) {
+                /*while (!getAirlinesOpen().contains(airline)) {
                     openAirlinesArray = (String[]) getAirlinesOpen().toArray();
                     out.writeObject(openAirlinesArray);
                     out.flush();
                     airline = (String) in.readObject();
                     passenger = (Passenger) in.readObject();
-                }
+                }*/
 
                 //create gate and boarding pass for passenger and send back to client
                 char terminalChar = ' ';
@@ -170,7 +170,7 @@ public class ReservationServer {
                     terminalChar = 'C';
                 }
                 passenger.setBoardingPass(new BoardingPass(passenger, airline, new Gate(terminalChar)));
-                out.writeObject(passenger);
+                out.writeObject(passenger.getBoardingPass());
                 out.flush();
 
                 //add passenger information to reservations.txt
@@ -181,15 +181,13 @@ public class ReservationServer {
                 } else if (airline.toUpperCase().equals("SOUTHWEST")) {
                     sw.addPassenger(passenger);
                 }
-                reservations.add(reservations.lastIndexOf("---------------------" +
-                        airline.toUpperCase()), passenger.toString());
-                reservations.add("---------------------" + airline.toUpperCase());
+                /*reservations.add(reservations.lastIndexOf("---------------------" +
+                        airline.toUpperCase()) + 1, passenger.toString());
+                reservations.add(reservations.indexOf(passenger.toString()) + 1,
+                        "---------------------" + airline.toUpperCase());*/
 
                 PrintWriter pw = new PrintWriter("reservations.txt");
-                for (String s : reservations) {
-                    pw.write(s);
-                }
-
+                pw.write(alaska.toString() + "\n\n" + delta.toString() + "\n\n" + sw.toString() + "\n\nEOF");
                 pw.close();
                 in.close();
                 out.close();

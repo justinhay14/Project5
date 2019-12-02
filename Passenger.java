@@ -59,4 +59,7 @@ public class Passenger implements Serializable {
     public void setBoardingPass(BoardingPass boardingPass) {
         this.boardingPass = boardingPass;
     }
+    public BoardingPass getBoardingPass() {
+        return boardingPass;
+    }
 }

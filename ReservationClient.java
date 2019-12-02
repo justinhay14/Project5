@@ -10,6 +10,8 @@ import java.util.ArrayList;
 
 public class ReservationClient implements Runnable{
     public static String choice = "";
+    public static String boardingPass = "";
+    public static String passInfo = "";
     public static void main(String args[]) {
         Thread t = new Thread(new ReservationClient());
         t.start();
@@ -86,12 +88,15 @@ public class ReservationClient implements Runnable{
         panel.add(description);
         JButton decline = new JButton("No I want a different flight");
         JButton accept = new JButton("Yes I want this flight");
+        JButton refresh = new JButton("Refresh");
         bottomPanel.add(exit);
         bottomPanel.add(chooseFlight);
         bottomPanel.add(decline);
         bottomPanel.add(accept);
+        bottomPanel.add(refresh);
         decline.setVisible(false);
         accept.setVisible(false);
+        refresh.setVisible(false);
         //
         //JPanel center = new JPanel();
         JLabel firstNameLabel = new JLabel("Enter your first name:");
@@ -235,14 +240,67 @@ public class ReservationClient implements Runnable{
                 String lastName = lastNameBox.getText();
                 try {
                     int age = Integer.parseInt(ageBox.getText());
-                    JOptionPane.showConfirmDialog(null,
+                    Passenger passenger = new Passenger(firstName, lastName, age);
+                    int confirmed = JOptionPane.showConfirmDialog(null,
                             "Please verify the following information\n" +
                                     "first name: " + firstName + "\nlast name: " + lastName + "\nage: " + age,
-                            "Airport Manager", JOptionPane.OK_OPTION, JOptionPane.QUESTION_MESSAGE);
+                            "Airport Manager", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                    if(confirmed == 0) {
+                        ArrayList<Passenger> passengers = new ArrayList<>();
+                        if(choice.equals("Alaska")) {
+                            finalOut.writeObject("APASS");
+                            finalOut.flush();
+                            passengers = (ArrayList<Passenger>) finalIn.readObject();
+                        } else if(choice.equals("Delta")) {
+                            finalOut.writeObject("DPASS");
+                            finalOut.flush();
+                            passengers = (ArrayList<Passenger>) finalIn.readObject();
+                        } else if(choice.equals("Southwest")) {
+                            finalOut.writeObject("SPASS");
+                            finalOut.flush();
+                            passengers = (ArrayList<Passenger>) finalIn.readObject();
+                        }
+                        String answer = "";
+                        for(Passenger line : passengers) {
+                            answer = answer + line.toString() + "\n";
+                        }
+                        finalOut.writeObject(null);
+                        finalOut.writeObject(choice);
+                        finalOut.writeObject(passenger);
+                        passInfo = passenger.toString();
+                        boardingPass = finalIn.readObject().toString();
+                        System.out.println(passInfo + "\n" + boardingPass);
+                        label.setText("Flight Data displaying for " + choice + " Airlines " +
+                                "which is now boarding at gate: " + boardingPass.substring(
+                                        boardingPass.indexOf("gate ") + 5,
+                                boardingPass.lastIndexOf("----------------------------------------")));
+                        label.setSize(100,100);
+                        description.setText(answer);
+                        description.setVisible(true);
+                        firstNameLabel.setVisible(false);
+                        firstNameBox.setVisible(false);
+                        lastNameLabel.setVisible(false);
+                        lastNameBox.setVisible(false);
+                        ageLabel.setVisible(false);
+                        ageBox.setVisible(false);
+                        next.setVisible(false);
+                        refresh.setVisible(true);
+                    }
                 } catch (NumberFormatException e) {
                     JOptionPane.showMessageDialog(null, "Please enter a valid age",
                             "Airport Manager", JOptionPane.ERROR_MESSAGE);
+                } catch (IllegalArgumentException e) {
+                    JOptionPane.showMessageDialog(null, "Please enter a valid name",
+                            "Airport Manager", JOptionPane.ERROR_MESSAGE);
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
                 }
+            }
+        });
+        refresh.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+
             }
         });
         airline.addKeyListener(new KeyListener() {

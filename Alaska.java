@@ -43,7 +43,7 @@ public class Alaska implements Airline {
     }
 
     public String toString() {
-        String a = "ALASKA\n" + spotsFilled + "/" + capacity + "\nAlaska Passenger List";
+        String a = "ALASKA\n" + spotsFilled + "/" + capacity + "\nAlaska Passenger List\n";
         for(int i = 0; i < passengers.size(); i++) {
             a = a + "\n" + passengers.get(i).toString() + "\n---------------------ALASKA";
         }
