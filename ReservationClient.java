@@ -68,7 +68,7 @@ public class ReservationClient implements Runnable{
         //main frame
         JFrame frame = new JFrame("Airport Manager");
         frame.setLayout(new BorderLayout());
-        frame.setSize(350,300);
+        frame.setSize(500,300);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         JPanel panel = new JPanel();
         JLabel label = new JLabel("Choose a flight from the drop down menu.");
@@ -84,8 +84,14 @@ public class ReservationClient implements Runnable{
         panel.add(label);
         panel.add(airline);
         panel.add(description);
+        JButton decline = new JButton("No I want a different flight");
+        JButton accept = new JButton("Yes I want this flight");
         bottomPanel.add(exit);
         bottomPanel.add(chooseFlight);
+        bottomPanel.add(decline);
+        bottomPanel.add(accept);
+        decline.setVisible(false);
+        accept.setVisible(false);
         frame.add(panel);
         frame.add(bottomPanel, BorderLayout.SOUTH);
         frame.setVisible(true);
@@ -95,7 +101,7 @@ public class ReservationClient implements Runnable{
         JFrame flightInfo = new JFrame("Passengers");
         flightInfo.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         flightInfo.setLayout(new BorderLayout());
-        flightInfo.setSize(200,200);
+        flightInfo.setSize(200,700);
         JPanel info = new JPanel();
         JPanel buttons = new JPanel();
         JPanel top = new JPanel();
@@ -109,11 +115,9 @@ public class ReservationClient implements Runnable{
         flightInfo.add(top, BorderLayout.NORTH);
         flightInfo.add(info, BorderLayout.CENTER);
         flightInfo.add(buttons, BorderLayout.SOUTH);
-        /////////////////////
-        //Network IO
-
-        ////////////////////
         //Listeners for buttons
+        ObjectOutputStream finalOut = out;
+        ObjectInputStream finalIn = in;
         exitWin.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -129,13 +133,64 @@ public class ReservationClient implements Runnable{
         chooseFlight.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                flightInfo.setVisible(false);
-                chooseFlight.setVisible(false);
-                airline.setVisible(false);
+                int taken = 0;
+                int spots = 0;
+                try {
+                    if(choice.equals("Alaska")) {
+                        finalOut.writeObject("ACOUNT");
+                        finalOut.flush();
+                        taken = Integer.parseInt(finalIn.readObject().toString());
+                        finalOut.writeObject("ACAP");
+                        finalOut.flush();
+                        spots = Integer.parseInt(finalIn.readObject().toString());
+                    } else if(choice.equals("Delta")) {
+                        finalOut.writeObject("DCOUNT");
+                        finalOut.flush();
+                        taken = Integer.parseInt(finalIn.readObject().toString());
+                        finalOut.writeObject("DCAP");
+                        finalOut.flush();
+                        spots = Integer.parseInt(finalIn.readObject().toString());
+                    } else if(choice.equals("Southwest")) {
+                        finalOut.writeObject("SCOUNT");
+                        finalOut.flush();
+                        taken = Integer.parseInt(finalIn.readObject().toString());
+                        finalOut.writeObject("SCAP");
+                        finalOut.flush();
+                        spots = Integer.parseInt(finalIn.readObject().toString());
+                    }
+                } catch(IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                if(taken < spots) {
+                    label.setText("Are you sure you want to book a flight on " + choice + " Airlines?");
+                    accept.setVisible(true);
+                    decline.setVisible(true);
+                    description.setVisible(false);
+                    flightInfo.setVisible(false);
+                    chooseFlight.setVisible(false);
+                    airline.setVisible(false);
+                }
             }
         });
-        ObjectOutputStream finalOut = out;
-        ObjectInputStream finalIn = in;
+        decline.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                label.setText("Choose a flight from the drop down menu.");
+                accept.setVisible(false);
+                decline.setVisible(false);
+                description.setVisible(true);
+                chooseFlight.setVisible(true);
+                airline.setVisible(true);
+            }
+        });
+        accept.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                label.setText("Please input the following information");
+                accept.setText("Next");
+                decline.setVisible(false);
+            }
+        });
         airline.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent keyEvent) {
@@ -220,21 +275,21 @@ public class ReservationClient implements Runnable{
                     description.setText("Alaska Airlines is one of the airlines we offer here at \nPurdue Airport.");
                     /////////////setText
                     //label1.setText("Alaska Airlines");
-                    passengerInfo.setText("Mango");
+                    //passengerInfo.setText("Mango");
                     /////////////
                 } else if(itemEvent.getItem().toString().equals("Delta")) {
                     choice = "Delta";
                     description.setText("Delta is a premier airline at Purdue. You will love it.");
                     /////////////setText
                     //label1.setText("Delta Airlines");
-                    passengerInfo.setText("Apple");
+                    //passengerInfo.setText("Apple");
                     /////////////
                 } else if(itemEvent.getItem().toString().equals("Southwest")) {
                     choice = "Southwest";
                     description.setText("Southwest is proud to offer flights to Purdue.");
                     /////////////setText
                     //label1.setText("Southwest Airlines");
-                    passengerInfo.setText("Banana");
+                    //passengerInfo.setText("Banana");
                     /////////////
                 }
             }
