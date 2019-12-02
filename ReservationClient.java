@@ -92,6 +92,32 @@ public class ReservationClient implements Runnable{
         bottomPanel.add(accept);
         decline.setVisible(false);
         accept.setVisible(false);
+        //
+        //JPanel center = new JPanel();
+        JLabel firstNameLabel = new JLabel("Enter your first name:");
+        JTextField firstNameBox = new JTextField(30);
+        JLabel lastNameLabel = new JLabel("Enter your last name:");
+        JTextField lastNameBox = new JTextField(30);
+        JLabel ageLabel = new JLabel("Enter your age:");
+        JTextField ageBox = new JTextField(30);
+        panel.add(firstNameLabel);
+        panel.add(firstNameBox);
+        panel.add(lastNameLabel);
+        panel.add(lastNameBox);
+        panel.add(ageLabel);
+        panel.add(ageBox);
+        firstNameLabel.setVisible(false);
+        firstNameBox.setVisible(false);
+        lastNameLabel.setVisible(false);
+        lastNameBox.setVisible(false);
+        ageLabel.setVisible(false);
+        ageBox.setVisible(false);
+        //center.setVisible(false);
+        //
+        //panel.add(center);
+        JButton next = new JButton("Next");
+        next.setVisible(false);
+        bottomPanel.add(next);
         frame.add(panel);
         frame.add(bottomPanel, BorderLayout.SOUTH);
         frame.setVisible(true);
@@ -169,6 +195,10 @@ public class ReservationClient implements Runnable{
                     flightInfo.setVisible(false);
                     chooseFlight.setVisible(false);
                     airline.setVisible(false);
+                } else {
+                    JOptionPane.showMessageDialog(null,
+                            "Please select a flight that is not full.", "Airport Manager",
+                            JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -186,9 +216,33 @@ public class ReservationClient implements Runnable{
         accept.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                label.setText("Please input the following information");
-                accept.setText("Next");
+                label.setText("-----------------------Please input the following information-------------------------");
+                firstNameLabel.setVisible(true);
+                firstNameBox.setVisible(true);
+                lastNameLabel.setVisible(true);
+                lastNameBox.setVisible(true);
+                ageLabel.setVisible(true);
+                ageBox.setVisible(true);
                 decline.setVisible(false);
+                accept.setVisible(false);
+                next.setVisible(true);
+            }
+        });
+        next.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                String firstName = firstNameBox.getText();
+                String lastName = lastNameBox.getText();
+                try {
+                    int age = Integer.parseInt(ageBox.getText());
+                    JOptionPane.showConfirmDialog(null,
+                            "Please verify the following information\n" +
+                                    "first name: " + firstName + "\nlast name: " + lastName + "\nage: " + age,
+                            "Airport Manager", JOptionPane.OK_OPTION, JOptionPane.QUESTION_MESSAGE);
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(null, "Please enter a valid age",
+                            "Airport Manager", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
         airline.addKeyListener(new KeyListener() {
