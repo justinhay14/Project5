@@ -8,4 +8,5 @@ public interface Airline extends Serializable {
     ArrayList<Passenger> getPassengers();
     String toString();
     void addPassenger(Passenger passenger);
+    void updateSpotsFilled();
 }

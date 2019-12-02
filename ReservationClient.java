@@ -2,8 +2,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 public class ReservationClient implements Runnable{
     public static String choice = "";
@@ -20,6 +23,8 @@ public class ReservationClient implements Runnable{
     @Override
     public void run() {
         Socket socket;
+        ObjectInputStream in = null;
+        ObjectOutputStream out = null;
         try {
             String ip = JOptionPane.showInputDialog(null,
                     "Type in the hostname of the Reservation Server.", "Airport Manager",
@@ -35,13 +40,18 @@ public class ReservationClient implements Runnable{
             }
             int port = Integer.parseInt(port1);
             socket = new Socket(ip, port);
+            out = new ObjectOutputStream(socket.getOutputStream());
+            in = new ObjectInputStream(socket.getInputStream());
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Invalid hostname and port.",
                     "Airport Manager", JOptionPane.ERROR_MESSAGE);
+
+
             System.exit(0);
         }
-        ImageIcon icon = new ImageIcon("src/image.png");
         ///////////////////
+        //JOptionPanes
+        ImageIcon icon = new ImageIcon("src/image.png");
         Object options[] = {"Exit", "Book a Flight"};
         if(JOptionPane.showOptionDialog(null, "Welcome", "Airport Manager",
                 JOptionPane.OK_OPTION, 0, icon, options, null) != 1) {
@@ -54,6 +64,8 @@ public class ReservationClient implements Runnable{
                 null) != 1) {
             System.exit(0);
         }
+        /////////////////
+        //main frame
         JFrame frame = new JFrame("Airport Manager");
         frame.setLayout(new BorderLayout());
         frame.setSize(350,300);
@@ -79,6 +91,7 @@ public class ReservationClient implements Runnable{
         frame.setVisible(true);
         airline.setSelectedIndex(-1);
         ///////////////////
+        //Small pop up panel (\)
         JFrame flightInfo = new JFrame("Passengers");
         flightInfo.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         flightInfo.setLayout(new BorderLayout());
@@ -97,6 +110,10 @@ public class ReservationClient implements Runnable{
         flightInfo.add(info, BorderLayout.CENTER);
         flightInfo.add(buttons, BorderLayout.SOUTH);
         /////////////////////
+        //Network IO
+
+        ////////////////////
+        //Listeners for buttons
         exitWin.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -115,9 +132,10 @@ public class ReservationClient implements Runnable{
                 flightInfo.setVisible(false);
                 chooseFlight.setVisible(false);
                 airline.setVisible(false);
-
             }
         });
+        ObjectOutputStream finalOut = out;
+        ObjectInputStream finalIn = in;
         airline.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent keyEvent) {
@@ -127,6 +145,62 @@ public class ReservationClient implements Runnable{
             @Override
             public void keyPressed(KeyEvent keyEvent) {
                 if(keyEvent.getKeyChar() == '\\' && airline.getSelectedIndex() != -1) {
+                    String label = "";
+                    ArrayList<Passenger> passengers = new ArrayList<>();
+                    if(airline.getSelectedIndex() == 0) {
+                        label = "Alaska Airlines ";
+                        try {
+                            finalOut.writeObject("ACOUNT");
+                            finalOut.flush();
+                            label = label + finalIn.readObject().toString() + "/";
+                            System.out.println(label);
+                            finalOut.writeObject("ACAP");
+                            finalOut.flush();
+                            label = label + finalIn.readObject().toString();
+                            System.out.println("received2");
+                            finalOut.writeObject("APASS");
+                            finalOut.flush();
+                            passengers = (ArrayList<Passenger>) finalIn.readObject();
+                        } catch (IOException | ClassNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                    } else if(airline.getSelectedIndex() == 1) {
+                        label = "Delta Airlines ";
+                        try {
+                            finalOut.writeObject("DCOUNT");
+                            finalOut.flush();
+                            label = label + finalIn.readObject().toString() + "/";
+                            finalOut.writeObject("DCAP");
+                            finalOut.flush();
+                            label = label + finalIn.readObject().toString();
+                            finalOut.writeObject("DPASS");
+                            finalOut.flush();
+                            passengers = (ArrayList<Passenger>) finalIn.readObject();
+                        } catch (IOException | ClassNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                    } else if(airline.getSelectedIndex() == 2) {
+                        label = "Delta Airlines ";
+                        try {
+                            finalOut.writeObject("SCOUNT");
+                            finalOut.flush();
+                            label = label + finalIn.readObject().toString() + "/";
+                            finalOut.writeObject("SCAP");
+                            finalOut.flush();
+                            label = label + finalIn.readObject().toString();
+                            finalOut.writeObject("SPASS");
+                            finalOut.flush();
+                            passengers = (ArrayList<Passenger>) finalIn.readObject();
+                        } catch (IOException | ClassNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    String answer = "";
+                    for(Passenger line : passengers) {
+                        answer = answer + line.toString() + "\n";
+                    }
+                    passengerInfo.setText(answer);
+                    label1.setText(label);
                     flightInfo.setVisible(true);
                 }
             }
@@ -140,25 +214,26 @@ public class ReservationClient implements Runnable{
         airline.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent itemEvent) {
+                flightInfo.setVisible(false);
                 if(itemEvent.getItem().toString().equals("Alaska")) {
                     choice = "Alaska";
                     description.setText("Alaska Airlines is one of the airlines we offer here at \nPurdue Airport.");
                     /////////////setText
-                    label1.setText("Alaska Airlines");
+                    //label1.setText("Alaska Airlines");
                     passengerInfo.setText("Mango");
                     /////////////
                 } else if(itemEvent.getItem().toString().equals("Delta")) {
                     choice = "Delta";
-                    description.setText("Delta is a premier airline at Purdue.  You will love it.");
+                    description.setText("Delta is a premier airline at Purdue. You will love it.");
                     /////////////setText
-                    label1.setText("Delta Airlines");
+                    //label1.setText("Delta Airlines");
                     passengerInfo.setText("Apple");
                     /////////////
                 } else if(itemEvent.getItem().toString().equals("Southwest")) {
                     choice = "Southwest";
                     description.setText("Southwest is proud to offer flights to Purdue.");
                     /////////////setText
-                    label1.setText("Southwest Airlines");
+                    //label1.setText("Southwest Airlines");
                     passengerInfo.setText("Banana");
                     /////////////
                 }
@@ -166,7 +241,11 @@ public class ReservationClient implements Runnable{
         });
     }
 
-    private class ResponseListener {
+    /*public static class ResponseListener implements Runnable {
 
-    }
+        @Override
+        public void run() {
+
+        }
+    }*/
 }

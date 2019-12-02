@@ -34,7 +34,14 @@ public class Delta implements Airline {
     public void addPassenger(Passenger passenger) {
         spotsFilled++;
         passengers.add(passenger);
+        //updateSpotsFilled();
     }
+
+    @Override
+    public void updateSpotsFilled() {
+        spotsFilled = passengers.size();
+    }
+
     public String toString() {
         String a = "DELTA\n" + spotsFilled + "/" + capacity + "\nDelta Passenger List";
         for(int i = 0; i < passengers.size(); i++) {

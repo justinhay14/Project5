@@ -34,7 +34,14 @@ public class Southwest implements Airline {
     public void addPassenger(Passenger passenger) {
         spotsFilled++;
         passengers.add(passenger);
+        //updateSpotsFilled();
     }
+
+    @Override
+    public void updateSpotsFilled() {
+        spotsFilled = passengers.size();
+    }
+
     public String toString() {
         String a = "SOUTHWEST\n" + spotsFilled + "/" + capacity + "\nSouthwest Passenger List";
         for(int i = 0; i < passengers.size(); i++) {

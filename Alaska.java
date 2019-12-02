@@ -34,6 +34,12 @@ public class Alaska implements Airline {
     public void addPassenger(Passenger passenger) {
         spotsFilled++;
         passengers.add(passenger);
+        //updateSpotsFilled();
+    }
+
+    @Override
+    public void updateSpotsFilled() {
+        spotsFilled = passengers.size();
     }
 
     public String toString() {
