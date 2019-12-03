@@ -240,7 +240,7 @@ public class ReservationClient implements Runnable{
                 String lastName = lastNameBox.getText();
                 try {
                     int age = Integer.parseInt(ageBox.getText());
-                    Passenger passenger = new Passenger(firstName, lastName, age);
+                    Passenger passenger = new Passenger(firstName.toUpperCase(), lastName.toUpperCase(), age);
                     int confirmed = JOptionPane.showConfirmDialog(null,
                             "Please verify the following information\n" +
                                     "first name: " + firstName + "\nlast name: " + lastName + "\nage: " + age,
@@ -267,9 +267,16 @@ public class ReservationClient implements Runnable{
                         finalOut.writeObject(null);
                         finalOut.writeObject(choice);
                         finalOut.writeObject(passenger);
+                        //answer += passenger.toString() + "\n";
                         passInfo = passenger.toString();
                         boardingPass = finalIn.readObject().toString();
                         System.out.println(passInfo + "\n" + boardingPass);
+
+                        passengers = (ArrayList<Passenger>) finalIn.readObject();
+                        answer = "";
+                        for(Passenger line : passengers) {
+                            answer = answer + line.toString() + "\n";
+                        }
                         label.setText("Flight Data displaying for " + choice + " Airlines " +
                                 "which is now boarding at gate: " + boardingPass.substring(
                                         boardingPass.indexOf("gate ") + 5,
@@ -300,7 +307,30 @@ public class ReservationClient implements Runnable{
         refresh.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-
+                try {
+                    ArrayList<Passenger> passengers = new ArrayList<>();
+                    Passenger nextPass;
+                    if (choice.equals("Alaska")) {
+                        finalOut.writeObject("APASS");
+                        finalOut.flush();
+                        passengers = (ArrayList<Passenger>) finalIn.readObject();
+                    } else if (choice.equals("Delta")) {
+                        finalOut.writeObject("DPASS");
+                        finalOut.flush();
+                        passengers = (ArrayList<Passenger>) finalIn.readObject();
+                    } else if (choice.equals("Southwest")) {
+                        finalOut.writeObject("SPASS");
+                        finalOut.flush();
+                        passengers = (ArrayList<Passenger>) finalIn.readObject();
+                    }
+                    String answer = "";
+                    for (Passenger line : passengers) {
+                        answer = answer + line.toString() + "\n";
+                    }
+                    description.setText(answer);
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
         });
         airline.addKeyListener(new KeyListener() {
@@ -320,11 +350,9 @@ public class ReservationClient implements Runnable{
                             finalOut.writeObject("ACOUNT");
                             finalOut.flush();
                             label = label + finalIn.readObject().toString() + "/";
-                            System.out.println(label);
                             finalOut.writeObject("ACAP");
                             finalOut.flush();
                             label = label + finalIn.readObject().toString();
-                            System.out.println("received2");
                             finalOut.writeObject("APASS");
                             finalOut.flush();
                             passengers = (ArrayList<Passenger>) finalIn.readObject();
