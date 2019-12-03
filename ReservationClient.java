@@ -276,7 +276,7 @@ public class ReservationClient {
                             //answer += passenger.toString() + "\n";
                             passInfo = passenger.toString();
                             boardingPass = finalIn.readObject().toString();
-                            System.out.println(passInfo + "\n" + boardingPass);
+                            //System.out.println(passInfo + "\n" + boardingPass);
 
                             passengers = (ArrayList<Passenger>) finalIn.readObject();
                             answer = "";
