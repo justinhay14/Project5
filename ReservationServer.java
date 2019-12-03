@@ -233,6 +233,12 @@ public class ReservationServer {
                         out.writeObject(delta.getPassengers());
                     } else if (nextRequest.equals("SPASS")) { //send back passenger list of southwest
                         out.writeObject(sw.getPassengers());
+                    } else if (nextRequest.equals("ACAP")) {
+                        out.writeObject(alaska.getCapacity());
+                    } else if (nextRequest.equals("DCAP")) {
+                        out.writeObject(delta.getCapacity());
+                    } else if (nextRequest.equals("SCAP")) {
+                        out.writeObject(sw.getCapacity());
                     }
                     out.flush();
                 }

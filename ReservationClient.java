@@ -244,6 +244,7 @@ public class ReservationClient {
                 public void actionPerformed(ActionEvent actionEvent) {
                     String firstName = firstNameBox.getText();
                     String lastName = lastNameBox.getText();
+                    String fraction = "";
                     try {
                         int age = Integer.parseInt(ageBox.getText());
                         Passenger passenger = new Passenger(firstName.toUpperCase(), lastName.toUpperCase(), age);
@@ -257,14 +258,23 @@ public class ReservationClient {
                                 finalOut.writeObject("APASS");
                                 finalOut.flush();
                                 passengers = (ArrayList<Passenger>) finalIn.readObject();
+                                finalOut.writeObject("ACAP");
+                                finalOut.flush();
+                                fraction = finalIn.readObject().toString();
                             } else if (choice.equals("Delta")) {
                                 finalOut.writeObject("DPASS");
                                 finalOut.flush();
                                 passengers = (ArrayList<Passenger>) finalIn.readObject();
+                                finalOut.writeObject("DCAP");
+                                finalOut.flush();
+                                fraction = finalIn.readObject().toString();
                             } else if (choice.equals("Southwest")) {
                                 finalOut.writeObject("SPASS");
                                 finalOut.flush();
                                 passengers = (ArrayList<Passenger>) finalIn.readObject();
+                                finalOut.writeObject("SCAP");
+                                finalOut.flush();
+                                fraction = finalIn.readObject().toString();
                             }
                             String answer = "";
                             for (Passenger line : passengers) {
@@ -290,7 +300,7 @@ public class ReservationClient {
                                             "------------------------------------------------------------" +
                                             "---------------------")));
                             label.setSize(100, 100);
-                            description.setText(answer);
+                            description.setText(passengers.size() + "/" + fraction + "\n" + answer);
                             description.setVisible(true);
                             boardingPassArea.setText(boardingPass);
                             boardingPassArea.setVisible(true);
@@ -318,25 +328,35 @@ public class ReservationClient {
                 @Override
                 public void actionPerformed(ActionEvent actionEvent) {
                     try {
+                        String fraction = "";
                         ArrayList<Passenger> passengers = new ArrayList<>();
                         if (choice.equals("Alaska")) {
                             finalOut.writeObject("APASS");
                             finalOut.flush();
                             passengers = (ArrayList<Passenger>) finalIn.readObject();
+                            finalOut.writeObject("ACAP");
+                            finalOut.flush();
+                            fraction = finalIn.readObject().toString();
                         } else if (choice.equals("Delta")) {
                             finalOut.writeObject("DPASS");
                             finalOut.flush();
                             passengers = (ArrayList<Passenger>) finalIn.readObject();
+                            finalOut.writeObject("DCAP");
+                            finalOut.flush();
+                            fraction = finalIn.readObject().toString();
                         } else if (choice.equals("Southwest")) {
                             finalOut.writeObject("SPASS");
                             finalOut.flush();
                             passengers = (ArrayList<Passenger>) finalIn.readObject();
+                            finalOut.writeObject("SCAP");
+                            finalOut.flush();
+                            fraction = finalIn.readObject().toString();
                         }
                         String answer = "";
                         for (Passenger line : passengers) {
                             answer = answer + line.toString() + "\n";
                         }
-                        description.setText(answer);
+                        description.setText(passengers.size() + "/" + fraction + "\n" + answer);
                     } catch (IOException | ClassNotFoundException e) {
                         e.printStackTrace();
                     }
