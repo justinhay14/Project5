@@ -30,11 +30,11 @@ public class ReservationServer {
 
         public ClientHandler(Socket socket) {
             this.socket = socket;
-            reservations = new ArrayList<>();
         }
 
         public ArrayList<String> getAirlinesOpen() {
             try {
+                reservations = new ArrayList<>();
                 //read from current reservations.txt and put contents into an arraylist
                 BufferedReader bfr = new BufferedReader(new FileReader(new File("reservations.txt")));
                 String nextLine;
@@ -47,9 +47,15 @@ public class ReservationServer {
                 ArrayList<String> openAirlines = new ArrayList<String>();
 
                 //create new alaska airline from reservations.txt
-                alaska = new Alaska(100, Integer.parseInt(reservations.get(reservations.indexOf
-                        ("ALASKA") + 1).substring(0,
-                        reservations.get(reservations.indexOf("ALASKA") + 1).indexOf("/"))));
+                int currentAlaskaPassengers = 0;
+                for (int i = reservations.indexOf("Alaska passenger list") + 1; i < reservations.indexOf("DELTA") - 1;
+                     i += 2) {
+                    currentAlaskaPassengers++;
+                }
+                System.out.println(currentAlaskaPassengers);
+                alaska = new Alaska(Integer.parseInt(reservations.get(reservations.indexOf("ALASKA") + 1).substring(
+                        reservations.get(reservations.indexOf("ALASKA") + 1).indexOf("/") + 1)),
+                        currentAlaskaPassengers);
                 for (int i = reservations.indexOf("Alaska passenger list") + 1;
                      i < reservations.indexOf("Alaska passenger list") + 1 + alaska.getSpotsFilled() * 2; i += 2) {
                     if(reservations.get(i).length() == 0)
@@ -66,9 +72,15 @@ public class ReservationServer {
                 }
 
                 //create new delta airline from reservations.txt
-                delta = new Delta(200, Integer.parseInt(reservations.get(reservations.indexOf
-                        ("DELTA") + 1).substring(0,
-                        reservations.get(reservations.indexOf("DELTA") + 1).indexOf("/"))));
+                int currentDeltaPassengers = 0;
+                for (int i = reservations.indexOf("Delta passenger list") + 1; i < reservations.
+                        indexOf("SOUTHWEST") - 1;
+                     i += 2) {
+                    currentDeltaPassengers++;
+                }
+                delta = new Delta(Integer.parseInt(reservations.get(reservations.indexOf("DELTA") + 1).substring(
+                        reservations.get(reservations.indexOf("DELTA") + 1).indexOf("/") + 1)),
+                        currentDeltaPassengers);
                 for (int i = reservations.indexOf("Delta passenger list") + 1;
                      i < reservations.indexOf("Delta passenger list") + 1 + delta.getSpotsFilled() * 2; i += 2) {
                     if(reservations.get(i).length() == 0)
@@ -85,9 +97,14 @@ public class ReservationServer {
                 }
 
                 //create new southwest airline from reservations.txt
-                sw = new Southwest(100, Integer.parseInt(reservations.get(reservations.indexOf
-                        ("SOUTHWEST") + 1).substring(0,
-                        reservations.get(reservations.indexOf("SOUTHWEST") + 1).indexOf("/"))));
+                int currentSouthwestPassengers = 0;
+                for (int i = reservations.indexOf("Southwest passenger list") + 1; i < reservations.size();
+                     i += 2) {
+                    currentSouthwestPassengers++;
+                }
+                sw = new Southwest(Integer.parseInt(reservations.get(reservations.indexOf("SOUTHWEST") + 1).substring(
+                        reservations.get(reservations.indexOf("SOUTHWEST") + 1).indexOf("/") + 1)),
+                        currentSouthwestPassengers);
                 for (int i = reservations.indexOf("Southwest passenger list") + 1;
                      i < reservations.indexOf("Southwest passenger list") + 1 + sw.getSpotsFilled() * 2; i += 2) {
                     if(reservations.get(i).length() == 0)
@@ -170,6 +187,8 @@ public class ReservationServer {
                     terminalChar = 'C';
                 }
                 passenger.setBoardingPass(new BoardingPass(passenger, airline, new Gate(terminalChar)));
+                passenger.setFirstName(passenger.getFirstName().toUpperCase());
+                passenger.setLastName(passenger.getLastName().toUpperCase());
                 out.writeObject(passenger.getBoardingPass());
                 out.flush();
 
@@ -181,6 +200,8 @@ public class ReservationServer {
                 } else if (airline.toUpperCase().equals("SOUTHWEST")) {
                     sw.addPassenger(passenger);
                 }
+
+
                 /*reservations.add(reservations.lastIndexOf("---------------------" +
                         airline.toUpperCase()) + 1, passenger.toString());
                 reservations.add(reservations.indexOf(passenger.toString()) + 1,
@@ -188,9 +209,33 @@ public class ReservationServer {
 
                 PrintWriter pw = new PrintWriter("reservations.txt");
                 pw.write(alaska.toString() + "\n\n" + delta.toString() + "\n\n" + sw.toString() + "\n\nEOF");
+                pw.flush();
                 pw.close();
-                in.close();
-                out.close();
+                getAirlinesOpen();
+                if (airline.toUpperCase().equals("ALASKA")) {
+                    out.writeObject(alaska.getPassengers());
+                    out.flush();
+                } else if (airline.toUpperCase().equals("DELTA")) {
+                    out.writeObject(delta.getPassengers());
+                    out.flush();
+                } else if (airline.toUpperCase().equals("SOUTHWEST")) {
+                    out.writeObject(sw.getPassengers());
+                    out.flush();
+                }
+
+                String nextRequest = "";
+                while (true) {
+                    nextRequest = (String) in.readObject();
+                    getAirlinesOpen();
+                    if (nextRequest.equals("APASS")) { //send back passenger list of alaska
+                        out.writeObject(alaska.getPassengers());
+                    } else if (nextRequest.equals("DPASS")) { //send back passenger list of delta
+                        out.writeObject(delta.getPassengers());
+                    } else if (nextRequest.equals("SPASS")) { //send back passenger list of southwest
+                        out.writeObject(sw.getPassengers());
+                    }
+                    out.flush();
+                }
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
