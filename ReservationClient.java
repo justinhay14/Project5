@@ -162,6 +162,9 @@ public class ReservationClient {
             exit.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent actionEvent) {
+                    JOptionPane.showMessageDialog(null,
+                            "Thank you for using Airport Manager.", "Airport Manager",
+                            JOptionPane.PLAIN_MESSAGE);
                     System.exit(0);
                 }
             });
