@@ -1,6 +1,9 @@
 import java.io.Serializable;
 import java.util.Random;
-
+/**
+ * @author Justin Hay, Justin Michaels
+ * @version 12/2/2019
+ */
 public class Gate implements Serializable {
     private char terminal;
     private int gate;

@@ -2,9 +2,12 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
-
+/**
+ * @author Justin Hay, Justin Michaels
+ * @version 12/2/2019
+ */
 public class ReservationServer {
-    public static void main(String args[]) throws IOException {
+    public static void main(String[] args) throws IOException {
         Random r = new Random();
         int port = 10000;//r.nextInt(65536);
         ServerSocket serverSocket = new ServerSocket(port);

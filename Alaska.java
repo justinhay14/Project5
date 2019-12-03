@@ -1,5 +1,8 @@
 import java.util.ArrayList;
-
+/**
+ * @author Justin Hay, Justin Michaels
+ * @version 12/2/2019
+ */
 public class Alaska implements Airline {
     private int capacity;
     private int spotsFilled;

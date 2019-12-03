@@ -7,13 +7,16 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-
+/**
+ * @author Justin Hay, Justin Michaels
+ * @version 12/2/2019
+ */
 public class ReservationClient {
-    public static String choice = "";
-    public static String boardingPass = "";
-    public static String passInfo = "";
+    private static String choice = "";
+    private static String boardingPass = "";
+    private static String passInfo = "";
 
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         Thread t = new Thread(new ResponseListener());
         t.start();
         try {
@@ -55,7 +58,7 @@ public class ReservationClient {
             ///////////////////
             //JOptionPanes
             ImageIcon icon = new ImageIcon("src/image.png");
-            Object options[] = {"Exit", "Book a Flight"};
+            Object[] options = {"Exit", "Book a Flight"};
             if (JOptionPane.showOptionDialog(null, "Welcome", "Airport Manager",
                     JOptionPane.OK_OPTION, 0, icon, options, null) != 1) {
                 return;
@@ -165,7 +168,7 @@ public class ReservationClient {
                     JOptionPane.showMessageDialog(null,
                             "Thank you for using Airport Manager.", "Airport Manager",
                             JOptionPane.PLAIN_MESSAGE);
-                    System.exit(0);
+
                 }
             });
             chooseFlight.addActionListener(new ActionListener() {
