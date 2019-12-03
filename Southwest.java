@@ -10,6 +10,7 @@ public class Southwest implements Airline {
         this.capacity = capacity;
         this.spotsFilled = spotsFilled;
     }
+
     @Override
     public String getAirlineName() {
         return "Southwest";
@@ -44,7 +45,7 @@ public class Southwest implements Airline {
 
     public String toString() {
         String a = "SOUTHWEST\n" + spotsFilled + "/" + capacity + "\nSouthwest passenger list";
-        for(int i = 0; i < passengers.size(); i++) {
+        for (int i = 0; i < passengers.size(); i++) {
             a = a + "\n" + passengers.get(i).toString() + "\n---------------------SOUTHWEST";
         }
         return a;

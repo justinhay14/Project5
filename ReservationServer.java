@@ -58,7 +58,7 @@ public class ReservationServer {
                         currentAlaskaPassengers);
                 for (int i = reservations.indexOf("Alaska passenger list") + 1;
                      i < reservations.indexOf("Alaska passenger list") + 1 + alaska.getSpotsFilled() * 2; i += 2) {
-                    if(reservations.get(i).length() == 0)
+                    if (reservations.get(i).length() == 0)
                         break;
                     alaska.addPassenger(new Passenger(reservations.get(i).substring(0, 1),
                             reservations.get(i).substring(reservations.get(i).indexOf(" ") + 1,
@@ -83,7 +83,7 @@ public class ReservationServer {
                         currentDeltaPassengers);
                 for (int i = reservations.indexOf("Delta passenger list") + 1;
                      i < reservations.indexOf("Delta passenger list") + 1 + delta.getSpotsFilled() * 2; i += 2) {
-                    if(reservations.get(i).length() == 0)
+                    if (reservations.get(i).length() == 0)
                         break;
                     delta.addPassenger(new Passenger(reservations.get(i).substring(0, 1),
                             reservations.get(i).substring(reservations.get(i).indexOf(" ") + 1,
@@ -107,7 +107,7 @@ public class ReservationServer {
                         currentSouthwestPassengers);
                 for (int i = reservations.indexOf("Southwest passenger list") + 1;
                      i < reservations.indexOf("Southwest passenger list") + 1 + sw.getSpotsFilled() * 2; i += 2) {
-                    if(reservations.get(i).length() == 0)
+                    if (reservations.get(i).length() == 0)
                         break;
                     sw.addPassenger(new Passenger(reservations.get(i).substring(0, 1),
                             reservations.get(i).substring(reservations.get(i).indexOf(" ") + 1,
@@ -140,7 +140,7 @@ public class ReservationServer {
                 String nextObj;
 
                 //send client back requested data about a flight
-                while ((nextObj = (String)in.readObject()) != null) {
+                while ((nextObj = (String) in.readObject()) != null) {
                     if (nextObj.equals("APASS")) { //send back passenger list of alaska
                         out.writeObject(alaska.getPassengers());
                     } else if (nextObj.equals("ACOUNT")) { //send back current number of passengers of alaska

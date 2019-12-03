@@ -10,6 +10,7 @@ public class Delta implements Airline {
         this.capacity = capacity;
         this.spotsFilled = spotsFilled;
     }
+
     @Override
     public String getAirlineName() {
         return "Delta";
@@ -44,7 +45,7 @@ public class Delta implements Airline {
 
     public String toString() {
         String a = "DELTA\n" + spotsFilled + "/" + capacity + "\nDelta passenger list";
-        for(int i = 0; i < passengers.size(); i++) {
+        for (int i = 0; i < passengers.size(); i++) {
             a = a + "\n" + passengers.get(i).toString() + "\n---------------------DELTA";
         }
         return a;

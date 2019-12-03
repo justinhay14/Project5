@@ -10,13 +10,14 @@ public class Passenger implements Serializable {
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
-        if(badName(firstName) || badName(lastName) || age < 0)
+        if (badName(firstName) || badName(lastName) || age < 0)
             throw new IllegalArgumentException();
     }
+
     private boolean badName(String name) {
         boolean answer = false;
-        for(int i = 0; i < name.length(); i++) {
-            if((((int) name.toUpperCase().charAt(i)) < 65 || ((int) name.toUpperCase().charAt(i)) > 90) &&
+        for (int i = 0; i < name.length(); i++) {
+            if ((((int) name.toUpperCase().charAt(i)) < 65 || ((int) name.toUpperCase().charAt(i)) > 90) &&
                     ((int) name.toUpperCase().charAt(i)) != 45)
                 answer = true;
         }
@@ -48,7 +49,7 @@ public class Passenger implements Serializable {
     }
 
     public String toString() {
-        return firstName.substring(0,1) + ". " + lastName + ", " + age;
+        return firstName.substring(0, 1) + ". " + lastName + ", " + age;
     }
 
     public boolean equals(Object o) {
@@ -59,6 +60,7 @@ public class Passenger implements Serializable {
     public void setBoardingPass(BoardingPass boardingPass) {
         this.boardingPass = boardingPass;
     }
+
     public BoardingPass getBoardingPass() {
         return boardingPass;
     }

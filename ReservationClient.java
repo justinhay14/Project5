@@ -33,13 +33,13 @@ public class ReservationClient {
                         "Type in the hostname of the Reservation Server.", "Airport Manager",
                         JOptionPane.QUESTION_MESSAGE);
                 if (ip == null) {
-                    System.exit(0);
+                    return;
                 }
                 String port1 = JOptionPane.showInputDialog(null,
                         "Type in the port of the Reservation Server.", "Airport Manager",
                         JOptionPane.QUESTION_MESSAGE);
                 if (port1 == null) {
-                    System.exit(0);
+                    return;
                 }
                 int port = Integer.parseInt(port1);
                 socket = new Socket(ip, port);
@@ -50,7 +50,7 @@ public class ReservationClient {
                         "Airport Manager", JOptionPane.ERROR_MESSAGE);
 
 
-                System.exit(0);
+                return;
             }
             ///////////////////
             //JOptionPanes
@@ -58,14 +58,14 @@ public class ReservationClient {
             Object options[] = {"Exit", "Book a Flight"};
             if (JOptionPane.showOptionDialog(null, "Welcome", "Airport Manager",
                     JOptionPane.OK_OPTION, 0, icon, options, null) != 1) {
-                System.exit(0);
+                return;
             }
             /////////////////////
             options = new Object[]{"Exit", "Yes I want to book a Flight"};
             if (JOptionPane.showOptionDialog(null, "Do you want to book a flight?",
                     "Airport Manager", 0, JOptionPane.PLAIN_MESSAGE, null, options,
                     null) != 1) {
-                System.exit(0);
+                return;
             }
             /////////////////
             //main frame

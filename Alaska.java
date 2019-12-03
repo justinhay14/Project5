@@ -10,6 +10,7 @@ public class Alaska implements Airline {
         this.capacity = capacity;
         this.spotsFilled = spotsFilled;
     }
+
     @Override
     public String getAirlineName() {
         return "Alaska";
@@ -44,7 +45,7 @@ public class Alaska implements Airline {
 
     public String toString() {
         String a = "ALASKA\n" + spotsFilled + "/" + capacity + "\nAlaska passenger list";
-        for(int i = 0; i < passengers.size(); i++) {
+        for (int i = 0; i < passengers.size(); i++) {
             a = a + "\n" + passengers.get(i).toString() + "\n---------------------ALASKA";
         }
         return a;
