@@ -472,12 +472,5 @@ public class ReservationClient {
             });
         }
 
-    /*public static class ResponseListener implements Runnable {
-
-        @Override
-        public void run() {
-
-        }
-    }*/
     }
 }

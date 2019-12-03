@@ -9,7 +9,7 @@ import java.util.*;
 public class ReservationServer {
     public static void main(String[] args) throws IOException {
         Random r = new Random();
-        int port = 10000;//r.nextInt(65536);
+        int port = 10000;
         ServerSocket serverSocket = new ServerSocket(port);
         Socket socket = null;
         System.out.println("Hosting Reservation Server on port: " + port);
@@ -23,7 +23,10 @@ public class ReservationServer {
             }
         }
     }
-
+    /**
+     * @author Justin Hay, Justin Michaels
+     * @version 12/2/2019
+     */
     public static class ClientHandler implements Runnable {
         private Socket socket;
         private Alaska alaska;
@@ -73,7 +76,6 @@ public class ReservationServer {
                 if (alaska.getSpotsFilled() < alaska.getCapacity()) {
                     openAirlines.add(alaska.getAirlineName());
                 }
-
                 //create new delta airline from reservations.txt
                 int currentDeltaPassengers = 0;
                 for (int i = reservations.indexOf("Delta passenger list") + 1; i < reservations.
