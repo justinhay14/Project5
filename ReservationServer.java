@@ -73,7 +73,8 @@ public class ReservationServer {
 
                 //create new delta airline from reservations.txt
                 int currentDeltaPassengers = 0;
-                for (int i = reservations.indexOf("Delta passenger list") + 1; i < reservations.indexOf("SOUTHWEST") - 1;
+                for (int i = reservations.indexOf("Delta passenger list") + 1; i < reservations.
+                        indexOf("SOUTHWEST") - 1;
                      i += 2) {
                     currentDeltaPassengers++;
                 }
