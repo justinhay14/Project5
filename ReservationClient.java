@@ -168,7 +168,7 @@ public class ReservationClient {
                     JOptionPane.showMessageDialog(null,
                             "Thank you for using Airport Manager.", "Airport Manager",
                             JOptionPane.PLAIN_MESSAGE);
-
+                    System.exit(0);
                 }
             });
             chooseFlight.addActionListener(new ActionListener() {
